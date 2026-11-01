@@ -21,7 +21,6 @@
 
 > **关于名字**  
 > 「如期」取自「如期而至」。  
-> 「倒数日」这个名字的视角是减法 —— 数字一天天变小，时间在流失；  
 > 「如期」的视角是到来 —— 那件事还在路上，它会在它该在的那天到。  
 > 同一个数字，两种心情。这也决定了界面的语气：没有红色告警、没有「仅剩」、没有催迫感。
 
@@ -32,7 +31,7 @@
 
 ### 安装
 
-直接下载 [**Releases**](https://github.com/jymomo123/Due/releases) 里最新的 `.apk`。
+直接下载 [**发布**](https://github.com/jymomo123/Due/releases) 里最新的 `.apk`。
 
 没有上架任何应用商店。装之前建议核对签名——官方发布包的证书是：
 
@@ -48,15 +47,15 @@ apksigner verify --print-certs 如期-x.y.z.apk
 
 ---
 
-## 一、联网边界
+## 一、联网
 
 这里有一条线，画得很清楚：
 
-**线内 —— 核心功能，一个字节的网络都不需要。**  
+**核心功能，一个字节的网络都不需要。**  
 所有事件、天数、提醒、小组件、备份，全部在本机完成。断网、飞行模式、  
 把 SIM 卡拔了，功能一样不缺，也不会少任何一个字。
 
-**线外 —— 只有一件事，而且它坏掉也不影响任何功能。**
+**只有一件事，而且它坏掉也不影响任何功能。**
 
 | 唯一联网点     | 做什么                             | 失败时             |
 | --------- | ------------------------------- | --------------- |
@@ -82,29 +81,7 @@ apksigner verify --print-certs 如期-x.y.z.apk
 
 ---
 
-## 二、怎么跑起来
-
-### 用 Android Studio（推荐）
-
-1. `File → Open`，选这个 `如期-Due` 目录。
-2. 首次打开会提示缺少 `local.properties` / SDK，让它自动下载 SDK 35 即可。
-3. 点 `Run ▶`。
-
-Gradle 8.9 的 wrapper 已经放在工程里（`gradlew` / `gradlew.bat` / `gradle/wrapper/gradle-wrapper.jar`），  
-所以不需要本机预装 Gradle。
-
-### 命令行
-
-```bash
-# 需要本机有 JDK 17 与 Android SDK，并写好 local.properties：
-#   sdk.dir=C\:\\Users\\<你>\\AppData\\Local\\Android\\Sdk
-./gradlew assembleDebug
-# 产物：app/build/outputs/apk/debug/app-debug.apk
-```
-
----
-
-## 三、设计：冰川玻璃
+## 二、设计：冰川glass
 
 上一版是纯黑白的纸与墨。这一版换成一整块冰：极淡的蓝、半透明的面、受光的边。
 
@@ -140,7 +117,7 @@ Compose 的 `Modifier.blur` 需要 **API 31**，而 minSdk 是 26。
 
 ---
 
-## 四、功能
+## 三、功能
 
 ### 核心
 
@@ -203,7 +180,7 @@ Compose 的 `Modifier.blur` 需要 **API 31**，而 minSdk 是 26。
 
 ---
 
-## 五、桌面小组件
+## 四、桌面小组件
 
 按 [Android 官方 App Widgets 文档](https://developer.android.com/develop/ui/views/appwidgets) 实现，  
 有几条约束必须守住：
@@ -224,7 +201,7 @@ Compose 的 `Modifier.blur` 需要 **API 31**，而 minSdk 是 26。
 
 ---
 
-## 六、数据在哪
+## 五、数据
 
 单个文件：`/data/data/com.offline.due/files/events.json`
 
@@ -265,7 +242,7 @@ v1 的旧文件仍可读：缺 `mode` 的按 `COUNTDOWN` 处理，缺 `endDate` 
 
 ---
 
-## 七、目录
+## 六、目录
 
 仓库根：
 
@@ -321,7 +298,7 @@ app/src/main/java/com/offline/due/
 
 ---
 
-## 八、没有编译器时怎么验证
+## 七、没有编译器时怎么验证
 
 这些脚本不参与打包，纯 Python，用来在没有真机的情况下守住逻辑和约定：
 
@@ -356,7 +333,7 @@ python tools/solar_proto.py   # 24 节气与已知日期对账
 
 ---
 
-## 九、已知限制
+## 八、已知限制
 
 - **没在真机上跑过**：能编译（`compileDebugKotlin` 零警告），逻辑和约定有六个脚本守着，  
   但这台机器既没有模拟器也没有真机，所以**手感、动画、兼容性都没验证过**。  
@@ -377,7 +354,7 @@ python tools/solar_proto.py   # 24 节气与已知日期对账
 
 ---
 
-## 十、许可证
+## 久、许可证
 
 本项目以 **Apache License 2.0** 发布，全文见 [`LICENSE`](LICENSE)。
 
@@ -411,7 +388,7 @@ OFL 允许修改与再分发，但要求修改版不得占用保留字体名—�
 
 ---
 
-## 十一、参与
+## 十、参与
 
 想改代码，先看 [`CONTRIBUTING.md`](CONTRIBUTING.md)——里面写了环境怎么配、
 六项自检怎么跑，以及几条最容易被 PR 破坏的约定（颜色只有一个来源、
