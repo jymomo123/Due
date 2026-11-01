@@ -111,7 +111,7 @@ jobs:
 
       # 缓存 Gradle 依赖和 wrapper。没这一步每次都要重新下载
       # Compose BOM + AGP，多花两三分钟。
-      - uses: gradle/actions/setup-gradle@v4
+      - uses: gradle/actions/setup-gradle@v6
 
       # `local.properties` 不入库（里面是本机 SDK 路径）。CI 上 AGP 会自己
       # 从 `ANDROID_HOME` 找 SDK，runner 镜像里已经装好了。
