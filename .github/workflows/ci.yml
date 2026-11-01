@@ -129,7 +129,7 @@ jobs:
       # 把 APK 传上来，方便在 PR 里直接下载试用。
       # 这是**调试用包**：没有正式密钥时它是 debug 签名的，不能覆盖安装
       # 已经装了正式版的机器（签名不同，Android 会拒绝）。
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: apk
           path: |
