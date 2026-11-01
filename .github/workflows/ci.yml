@@ -29,7 +29,7 @@ jobs:
     name: 静态自检
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - uses: actions/setup-python@v5
         with:
@@ -100,7 +100,7 @@ jobs:
     name: 编译
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       # 这个工程用 JDK 17：`compileOptions` 和 `kotlinOptions` 都写死 17，
       # AGP 8.7.3 本身也要求 17 以上。换版本会在 kotlinOptions 那里报错。
