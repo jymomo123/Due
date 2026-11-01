@@ -1,0 +1,25 @@
+# 行尾统一。
+#
+# 这个工程原本的行尾是**混的**：`MainActivity.kt` 是 LF，`EditScreen.kt` 和
+# `ColorCanvas.kt` 是 CRLF——大概是不同轮次用了不同工具改的。
+#
+# 不统一的话，谁把某个文件从 CRLF 存成 LF（或反过来），git 会认为**每一行都改了**，
+# 一次真正的三行修改会显示成"整个文件重写"。评审的人只会跳过这种 diff。
+#
+# 所以：仓库里一律存 LF，检出时也一律 LF；只有 Windows 批处理强制 CRLF
+# （`cmd.exe` 读 LF 的 .bat 会出问题）。
+* text=auto eol=lf
+
+*.bat   text eol=crlf
+*.cmd   text eol=crlf
+gradlew text eol=lf
+
+# 二进制：别让 git 尝试做行尾转换或文本 diff
+*.jar  binary
+*.png  binary
+*.jpg  binary
+*.webp binary
+*.ttf  binary
+*.otf  binary
+*.apk  binary
+*.aab  binary

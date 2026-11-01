@@ -1,0 +1,33 @@
+如期 · Due
+Copyright 2026 机翼 (https://github.com/jymomo123)
+
+---
+
+本产品包含第三方组件，其著作权归各自所有者，按下列协议分发。
+
+This product includes third-party components, each distributed under
+its own license as listed below.
+
+1. AndroidX / Jetpack Compose / Material Components
+   Copyright (C) The Android Open Source Project
+   Apache License, Version 2.0
+   https://www.apache.org/licenses/LICENSE-2.0
+
+2. 思源黑体 / Noto Sans SC（内嵌于 app/src/main/res/font/）
+   Copyright 2014-2021 Adobe (http://www.adobe.com/),
+   with Reserved Font Name 'Source'
+   SIL Open Font License, Version 1.1
+   全文见 app/src/main/res/raw/ofl_noto_sans_sc.txt
+
+   说明：本工程内嵌的是**子集化后**的字体（只保留界面用到的字形）。
+   OFL 要求"修改过的版本不得使用保留字体名"，而本工程内字体的
+   字体族名仍为 `Noto Sans SC`——`Source` 只出现在版权声明与商标字段里，
+   未被用作字体名，因此不构成对保留字体名的占用。
+
+---
+
+关于 Apache License 2.0 第 4(d) 条：
+
+如果你分发本作品的衍生品，必须一并传递本 NOTICE 文件的内容。
+这不是可选项——`LICENSE` 里只写"保留声明"，具体保留哪几条声明，
+由这个文件回答。

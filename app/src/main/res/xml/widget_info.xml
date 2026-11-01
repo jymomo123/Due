@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  小组件声明。API 31 起新增的属性（targetCellWidth / targetCellHeight / previewLayout）
+  放在 res/xml-v31/widget_info.xml 里，这里只放所有版本都认的。
+
+  updatePeriodMillis 官方最小 30 分钟（1800000），低于此值系统会静默改成 30 分钟。
+  所以这里就是 30 分钟——「秒」交给 Chronometer 自走，不靠这个字段。
+
+  ## minResize 和 minWidth 不是一回事
+
+  minWidth/minHeight 是**放下时**的默认尺寸；minResizeWidth/minResizeHeight 是
+  **允许拖到多小**。只写前两个的话，用户可以把它拖到比 110×56 还小——
+  那时四行内容连数字都放不下，看到的就是一块被裁掉一半的玻璃。
+
+  0.46 之前没有这两个属性，所以"组件大小不完善"里有一半是这个。
+-->
+<appwidget-provider xmlns:android="http://schemas.android.com/apk/res/android"
+    android:description="@string/widget_description"
+    android:initialLayout="@layout/widget_today"
+    android:minHeight="56dp"
+    android:minResizeHeight="56dp"
+    android:minResizeWidth="110dp"
+    android:minWidth="110dp"
+    android:resizeMode="horizontal|vertical"
+    android:updatePeriodMillis="1800000"
+    android:widgetCategory="home_screen" />

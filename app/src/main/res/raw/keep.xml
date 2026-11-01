@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  资源压缩的保留清单。
+
+  release 开了 `isShrinkResources = true`，它只保留**代码里引用过**的资源。
+  思源黑体的 OFL 许可证（`res/raw/ofl_noto_sans_sc.txt`）没有任何代码引用它——
+  它是给人看的，不是给程序读的——所以在第一版打包时被直接删掉了。
+
+  这不是"少了个文件"那么轻：OFL 要求分发字体时附带许可证，
+  删掉就等于违约。而它**不会以任何形式报错**，装完也用不出问题，
+  只有去翻 APK 内容才发现。所以必须有这条显式声明。
+
+  另：`res/font/` 下的四个 ttf 不需要写在这里——它们被 `R.font.*` 引用，
+  压缩器能自己看到。
+-->
+<resources xmlns:tools="http://schemas.android.com/tools"
+    tools:keep="@raw/ofl_noto_sans_sc" />

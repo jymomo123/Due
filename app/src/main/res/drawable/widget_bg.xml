@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  小组件的玻璃底。
+
+  和应用里同一套逻辑：上下渐变模拟光入射，1dp 亮边是受光面。
+  这里不能用 Compose，只能用 shape，所以"折射边"省掉了——
+  在 1~2 格的桌面尺寸下，一条亮边已经足够读出"这是一块玻璃"。
+-->
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <shape android:shape="rectangle">
+            <corners android:radius="24dp" />
+            <gradient
+                android:angle="270"
+                android:endColor="#DCE9F8"
+                android:startColor="#F7FBFF" />
+            <stroke
+                android:width="1dp"
+                android:color="#CCFFFFFF" />
+        </shape>
+    </item>
+</layer-list>

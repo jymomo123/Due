@@ -1,0 +1,139 @@
+name: CI
+
+# 什么时候跑：主分支的每次推送、每个 PR、以及手动触发。
+#
+# 为什么 PR 也要跑：这个工程的红线大多是"静态可查"的——配色只有一份来源、
+# 圆角只许走 `Radius`、弹窗必须走 `GlassDialog`。这些正是 PR 最容易悄悄破坏的东西，
+# 而编译器一条都不管。
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+# 同一分支连续推两次，前一次就没意义了——直接取消，别占着 runner 排队。
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+# 这个工作流只读仓库，不写任何东西。显式写死，免得以后加了步骤
+# 顺手拿到不该有的权限。
+permissions:
+  contents: read
+
+jobs:
+  # ──────────────────────────────────────────────────────────────
+  # 静态自检：六个 Python 脚本，不编译，几秒钟出结果。
+  # ──────────────────────────────────────────────────────────────
+  checks:
+    name: 静态自检
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      # 先确认这些脚本**会失败**。
+      #
+      # 这一条是给 0.58.19 那个坑立的碑：当时六个脚本里只有两个带退出码，
+      # 另外四个（audit / parser_check / math_check / morph_check）无论查出
+      # 多少问题都 `exit 0`。终端里人眼能看见「问题 0 条」，CI 看不见——
+      # 它只认退出码。于是这条流水线会永远是绿的。
+      #
+      # 一个不会失败的检查，比没有检查更危险：它让人以为这条线守住了。
+      # 所以这里不信任脚本的行为，先查它的源码。
+      #
+      # 判据是「**最后一条有效语句**是不是退出码」，而不是「文件里有没有退出码」。
+      # 第一版写的就是后者，结果被 audit.py 第 34 行骗了——
+      #
+      #     if not files:
+      #         print("没找到 kotlin 源文件")
+      #         sys.exit(1)          # ← 这是"找不到源码"的提前退出，不是失败判据
+      #
+      # 全文件搜 `sys.exit` 命中它，于是把收尾退出码已经删掉的版本判成合格。
+      # 判据必须锚在**汇总之后那一句**上，才对应"查出问题就失败"这个语义。
+      #
+      # 另外两条：
+      #  - `sed 's/#.*//'` 先剥注释，再丢掉空行。注释里提到 `sys.exit` 不算数。
+      #  - 最后一条语句里不许出现写死的 `exit(0)`。硬编码成功和没有退出码等价。
+      - name: 确认自检脚本带退出码
+        run: |
+          missing=0
+          for s in audit parser_check math_check remind_check stress_check morph_check; do
+            last=$(sed 's/#.*//' "$s.py" | grep -vE '^[[:space:]]*$' | tail -1)
+            if ! printf '%s' "$last" | grep -qE '^[[:space:]]*(sys\.exit\(|raise SystemExit\()'; then
+              echo "::error file=$s.py::最后一句不是退出码（实际是：$last），这个脚本永远不会失败"
+              missing=1
+            elif printf '%s' "$last" | grep -qE '(sys\.exit|SystemExit)\(0\)'; then
+              echo "::error file=$s.py::退出码写死成 0（$last），等于没有"
+              missing=1
+            else
+              echo "ok   $s.py → $last"
+            fi
+          done
+          exit $missing
+
+      # 六个脚本必须留在**仓库根目录**：它们都用 `Path(__file__).parent`
+      # 定位源码，挪进 `tools/` 就找不到 `app/src/main/java` 了。
+      #
+      # 不用 `set -e`：一个脚本挂了也要把其余五个跑完，否则每次只看到一个红叉，
+      # 修完一个再来一个，来回五轮。
+      - name: 六项自检
+        run: |
+          fail=0
+          for s in audit parser_check math_check remind_check stress_check morph_check; do
+            echo "::group::$s.py"
+            python "$s.py" || fail=1
+            echo "::endgroup::"
+          done
+          if [ $fail -ne 0 ]; then
+            echo "::error::静态自检未通过，详见上面各组的输出"
+          fi
+          exit $fail
+
+  # ──────────────────────────────────────────────────────────────
+  # 编译：验证代码真的能构建出 APK。
+  # ──────────────────────────────────────────────────────────────
+  build:
+    name: 编译
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # 这个工程用 JDK 17：`compileOptions` 和 `kotlinOptions` 都写死 17，
+      # AGP 8.7.3 本身也要求 17 以上。换版本会在 kotlinOptions 那里报错。
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      # 缓存 Gradle 依赖和 wrapper。没这一步每次都要重新下载
+      # Compose BOM + AGP，多花两三分钟。
+      - uses: gradle/actions/setup-gradle@v4
+
+      # `local.properties` 不入库（里面是本机 SDK 路径）。CI 上 AGP 会自己
+      # 从 `ANDROID_HOME` 找 SDK，runner 镜像里已经装好了。
+      #
+      # release 也编，而且是**故意**的：`isShrinkResources = true` 会把
+      # 没被代码引用到的资源删掉，而 `res/raw/` 里有几个是"给人看、给程序读"
+      # 的（OFL 协议全文、资源白名单 keep.xml）。这类问题只在 release 构建里
+      # 才暴露——debug 不压缩，永远编得过。只编 debug 等于没验。
+      #
+      # 没有 `keystore.properties` 时 `hasReleaseKey` 为 false，会退回 debug
+      # 签名，照样能装。所以 CI 不需要任何密钥。
+      - name: 构建 debug 与 release
+        run: ./gradlew --no-daemon --stacktrace assembleDebug assembleRelease
+
+      # 把 APK 传上来，方便在 PR 里直接下载试用。
+      # 这是**调试用包**：没有正式密钥时它是 debug 签名的，不能覆盖安装
+      # 已经装了正式版的机器（签名不同，Android 会拒绝）。
+      - uses: actions/upload-artifact@v4
+        with:
+          name: apk
+          path: |
+            app/build/outputs/apk/debug/*.apk
+            app/build/outputs/apk/release/*.apk
+          if-no-files-found: error
+          retention-days: 14

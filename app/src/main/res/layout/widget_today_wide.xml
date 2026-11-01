@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  小组件的**横排**布局：宽而矮的格子（2×1、4×2）用这一套。
+
+  ## 为什么要有第二套
+
+  竖排布局里数字的宽度和高度是**同一条约束的两端**：格子越宽，数字并不会
+  更大——它被高度卡死。2×1（180×56）时数字只能到 29.6dp，右边空出一大片；
+  4×2（390×126）时数字 55dp，宽度还剩一半没人用。
+
+  横排把这两件事分开：数字吃满高度，标题/日期/秒在右边竖着排。
+  同一个 4×2 格子里，数字能从 55dp 长到 90dp——而它本来就是这块组件的
+  唯一信息。
+
+  ## 判定在哪
+
+  `TodayWidgetProvider` 里按 `宽 / 高 >= 2.6` 选布局。2×1 是 3.2、4×2 是 3.1，
+  都过线；1×1 是 2.0、2×2 是 1.4，都不过线。这条线不是拍的：
+  低于 2.6 时，右边那列文字会被压到放不下四个字，不如让它们换到下面去。
+
+  ## ID 必须和竖排那份完全一致
+
+  RemoteViews 是按 ID 找控件的，两套布局用同一组 ID，`update()` 才能只写一份
+  绑定逻辑。少一个 ID 的后果是 `setTextViewText` 静默失败——不报错，
+  只是那个字段永远显示 XML 里的默认值。
+-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/widget_root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/widget_bg"
+    android:gravity="center_vertical"
+    android:orientation="vertical"
+    android:paddingStart="14dp"
+    android:paddingTop="11dp"
+    android:paddingEnd="14dp"
+    android:paddingBottom="11dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/widget_accent"
+            android:layout_width="3dp"
+            android:layout_height="match_parent"
+            android:background="#4A8FE7"
+            android:contentDescription="@null" />
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:layout_weight="1"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <!-- 数字：吃满可用高度，宽度上限由代码按 55% 内宽算 -->
+            <TextView
+                android:id="@+id/widget_number"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/noto_sc_900"
+                android:includeFontPadding="false"
+                android:maxLines="1"
+                android:text="—"
+                android:textColor="#14263C"
+                android:textSize="40dp" />
+
+            <!-- 右边一列：标题 / 日期 / 秒 -->
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="14dp"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/widget_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:fontFamily="@font/noto_sc_700"
+                    android:includeFontPadding="false"
+                    android:maxLines="1"
+                    android:text="如期"
+                    android:textColor="#4C6684"
+                    android:textSize="11dp" />
+
+                <TextView
+                    android:id="@+id/widget_date"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:ellipsize="end"
+                    android:fontFamily="@font/noto_sc_400"
+                    android:includeFontPadding="false"
+                    android:maxLines="1"
+                    android:text=""
+                    android:textColor="#6B83A0"
+                    android:textSize="10dp" />
+
+                <Chronometer
+                    android:id="@+id/widget_precise"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:fontFamily="@font/noto_sc_400"
+                    android:format="%s"
+                    android:includeFontPadding="false"
+                    android:textColor="#6B83A0"
+                    android:textSize="11dp"
+                    android:visibility="gone" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</LinearLayout>

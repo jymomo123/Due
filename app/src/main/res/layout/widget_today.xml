@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  小组件布局。
+
+  RemoteViews 只支持有限的 View 类型（TextView / ImageView / LinearLayout /
+  FrameLayout / Chronometer / ProgressBar / Button 等），不能放 Compose，
+  也不能放自定义 View。所以这里全部用最基础的几个类拼。
+
+  Chronometer 是「显示秒」的关键：它在 RemoteViews 白名单里，由系统自己
+  每秒刷新，App 不需要醒着，也不耗电。靠 updatePeriodMillis 做不到——
+  官方下限是 30 分钟。
+
+  ## 0.46 修的三件事
+
+  1. **字体**。上一版四个 TextView 都没写 fontFamily，桌面上用的是**系统字体**，
+     而 App 里是思源黑体。同一个界面两套字形，笔画粗细、字面宽窄都不一样——
+     这是"字体看着不对"的根源，不是字号的问题。
+     现在逐个指定：标题 700、数字 900（和 App 的 displayMedium 同字重）、
+     日期和秒 400。数字用 900 是因为 `CountdownMath.headline()` 只输出数字和负号，
+     全在 `noto_sc_900` 的 display 子集里。
+
+  2. **字号单位 sp → dp**。sp 会跟随系统字号缩放：用户把字体调到 1.3 倍，
+     33sp 变成 43dp，1 格高的格子里数字会被上下裁掉。
+     小组件是"桌面上的图形"，不该跟着系统字号变——这和 App 里大数字
+     用 `displaySp()` 抵消 fontScale 是同一条理由。
+     XML 里的值只是初始值，真实字号由 `TodayWidgetProvider` 按格子大小算。
+
+  3. **竖条高度**。上一版竖条直接挂在根 LinearLayout 下，`match_parent` 拉满
+     整个格子（减 padding）。2 格高时那条线有 86dp，比旁边的四行内容还长，
+     看着像一根柱子。现在把竖条和内容一起放进一个 `wrap_content` 的内层，
+     竖条 match_parent 这个内层——高度天然等于内容高度。
+
+  ## 为什么竖条是 ImageView 而不是 View
+
+  `android.view.View` 没有 `@RemoteView` 注解，RemoteViews inflate 时会直接抛
+  InflateException。ImageView 是最轻的、能当纯色块用的白名单控件。
+-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/widget_root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/widget_bg"
+    android:gravity="center_vertical"
+    android:orientation="vertical"
+    android:paddingStart="14dp"
+    android:paddingTop="11dp"
+    android:paddingEnd="14dp"
+    android:paddingBottom="11dp">
+
+    <!-- 这一层只负责"让竖条和内容一样高"。它自己 wrap_content，
+         竖条 match_parent 它，于是竖条 = 内容高度，不会拉满格子。 -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <!-- 事件色：一条 3dp 的竖线，是整个小组件唯一的彩色 -->
+        <ImageView
+            android:id="@+id/widget_accent"
+            android:layout_width="3dp"
+            android:layout_height="match_parent"
+            android:background="#4A8FE7"
+            android:contentDescription="@null" />
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/widget_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:fontFamily="@font/noto_sc_700"
+                android:includeFontPadding="false"
+                android:maxLines="1"
+                android:text="如期"
+                android:textColor="#4C6684"
+                android:textSize="11dp" />
+
+            <TextView
+                android:id="@+id/widget_number"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:fontFamily="@font/noto_sc_900"
+                android:includeFontPadding="false"
+                android:maxLines="1"
+                android:text="—"
+                android:textColor="#14263C"
+                android:textSize="30dp" />
+
+            <TextView
+                android:id="@+id/widget_date"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:ellipsize="end"
+                android:fontFamily="@font/noto_sc_400"
+                android:includeFontPadding="false"
+                android:maxLines="1"
+                android:text=""
+                android:textColor="#6B83A0"
+                android:textSize="10dp" />
+
+            <Chronometer
+                android:id="@+id/widget_precise"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:fontFamily="@font/noto_sc_400"
+                android:format="%s"
+                android:includeFontPadding="false"
+                android:textColor="#6B83A0"
+                android:textSize="11dp"
+                android:visibility="gone" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</LinearLayout>

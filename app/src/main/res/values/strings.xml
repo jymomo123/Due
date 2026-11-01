@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">如期</string>
+    <string name="widget_name">如期 · 最近的一件事</string>
+    <string name="widget_description">在桌面显示离今天最近的一件事</string>
+</resources>

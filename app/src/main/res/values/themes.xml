@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--
+      启动窗口的底色必须和 IceBackground 的顶档一致（#F7FBFF 附近），
+      否则冷启动时会先闪一下白，再跳成冰蓝。这一帧的差别很显眼。
+    -->
+    <style name="Theme.Due" parent="android:Theme.Material.Light.NoActionBar">
+        <item name="android:windowBackground">#E8F1FC</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:navigationBarColor">@android:color/transparent</item>
+        <item name="android:windowLightStatusBar">true</item>
+        <item name="android:windowLightNavigationBar">true</item>
+    </style>
+</resources>

@@ -1,0 +1,26 @@
+# 依赖更新检查。
+#
+# 只做两件事：Gradle 依赖和 GitHub Actions 的版本。两者都不自动合并——
+# 这个工程没有真机测试，一个「小版本升级」也可能悄悄改掉 Compose 的
+# 默认行为（比如 `animateContentSize` 的曲线、`Text` 的行高舍入），
+# 而这些正是界面最在意的地方。所以 PR 开出来，人来判断。
+version: 2
+updates:
+  - package-ecosystem: gradle
+    directory: "/"
+    schedule:
+      interval: weekly
+      day: monday
+    open-pull-requests-limit: 5
+    # 版本号统一在一处改：`app/build.gradle.kts` 的 dependencies 块。
+    labels: ["dependencies"]
+    commit-message:
+      prefix: "依赖"
+
+  - package-ecosystem: github-actions
+    directory: "/"
+    schedule:
+      interval: monthly
+    labels: ["dependencies", "ci"]
+    commit-message:
+      prefix: "CI"

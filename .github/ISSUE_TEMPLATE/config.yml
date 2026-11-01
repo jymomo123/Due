@@ -1,0 +1,10 @@
+# 关掉"空白 issue"，强制走模板。
+#
+# 不设的话，一半的报告会是一句话「打不开了」，然后来回三四轮问版本号和机型。
+# 模板里那几项不是形式——这个 App 没有遥测，作者能拿到的只有用户写下的这些。
+blank_issues_enabled: false
+
+contact_links:
+  - name: 安全漏洞
+    url: https://github.com/jymomo123/Due/security/advisories/new
+    about: 别开公开 issue。请走私密报告，详见 SECURITY.md。

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  图标就是年历页的微缩：九个点里只有一个亮着。
+  没有文字、没有字母、没有渐变 —— 只陈述一个几何事实：某一天，在它该在的位置上。
+
+  底是淡冰，所以点用深蓝墨而不是白色；中心那一颗用强调蓝，
+  它就是"那一天"。
+
+  几何约束：自适应图标只有中心 72×72 会被看见，四个角还会被圆形遮罩裁掉。
+  所以点阵跨度取 48（30..78），最远的角点距中心 28.3 + 半径 4 = 32.3 < 36，不会被切。
+-->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+
+    <path
+        android:fillAlpha="0.26"
+        android:fillColor="#16283F"
+        android:pathData="M30,34 a4,4 0 1,0 8,0 a4,4 0 1,0 -8,0" />
+    <path
+        android:fillAlpha="0.26"
+        android:fillColor="#16283F"
+        android:pathData="M50,34 a4,4 0 1,0 8,0 a4,4 0 1,0 -8,0" />
+    <path
+        android:fillAlpha="0.26"
+        android:fillColor="#16283F"
+        android:pathData="M70,34 a4,4 0 1,0 8,0 a4,4 0 1,0 -8,0" />
+    <path
+        android:fillAlpha="0.26"
+        android:fillColor="#16283F"
+        android:pathData="M30,54 a4,4 0 1,0 8,0 a4,4 0 1,0 -8,0" />
+    <path
+        android:fillAlpha="0.26"
+        android:fillColor="#16283F"
+        android:pathData="M70,54 a4,4 0 1,0 8,0 a4,4 0 1,0 -8,0" />
+    <path
+        android:fillAlpha="0.26"
+        android:fillColor="#16283F"
+        android:pathData="M30,74 a4,4 0 1,0 8,0 a4,4 0 1,0 -8,0" />
+    <path
+        android:fillAlpha="0.26"
+        android:fillColor="#16283F"
+        android:pathData="M50,74 a4,4 0 1,0 8,0 a4,4 0 1,0 -8,0" />
+    <path
+        android:fillAlpha="0.26"
+        android:fillColor="#16283F"
+        android:pathData="M70,74 a4,4 0 1,0 8,0 a4,4 0 1,0 -8,0" />
+
+    <path
+        android:fillColor="#2F76F0"
+        android:pathData="M45.5,54 a8.5,8.5 0 1,0 17,0 a8.5,8.5 0 1,0 -17,0" />
+</vector>

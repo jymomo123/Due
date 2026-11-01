@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Android 12（API 31）起的小组件声明。
+
+  新增三件事：
+   - targetCellWidth / targetCellHeight：按"格子数"而不是 dp 声明默认尺寸，
+     这样系统能把它放到正确的位置，而不是靠 minWidth 猜。
+   - previewLayout：桌面选择器里直接显示真实布局，不用另做一张预览图。
+   - maxResizeWidth / maxResizeHeight：限制拉伸上限，避免拉成一条缝。
+-->
+<appwidget-provider xmlns:android="http://schemas.android.com/apk/res/android"
+    android:description="@string/widget_description"
+    android:initialLayout="@layout/widget_today"
+    android:maxResizeHeight="160dp"
+    android:maxResizeWidth="400dp"
+    android:minHeight="56dp"
+    android:minWidth="110dp"
+    android:previewLayout="@layout/widget_today"
+    android:resizeMode="horizontal|vertical"
+    android:targetCellHeight="1"
+    android:targetCellWidth="2"
+    android:updatePeriodMillis="1800000"
+    android:widgetCategory="home_screen" />

@@ -1,0 +1,50 @@
+# ── 签名材料：绝对不能进仓库 ──────────────────────────────
+#
+# `keystore.properties` 里是明文口令，`*.jks` 是私钥本身。
+# 这两个一旦推上 GitHub，等于把发布签名送人——别人可以签出和你
+# 一模一样的包，而你无法撤销（改签名 = 老用户无法覆盖安装）。
+# 删掉之后 `app/build.gradle.kts` 的 `hasReleaseKey` 会退回 debug 签名，
+# 克隆者照样能编译、能装，只是不能发版。
+keystore.properties
+*.jks
+*.keystore
+!debug.keystore
+
+# 本机 SDK 路径，因机器而异，不该共享
+local.properties
+
+# ── 构建产物 ────────────────────────────────────────────
+build/
+.gradle/
+.kotlin/
+captures/
+.externalNativeBuild/
+.cxx/
+
+# ── 安装包 ──────────────────────────────────────────────
+#
+# 二进制不进仓库：一个 4MB 的 APK 每发一版就多一份，仓库会越来越重，
+# 而 git 是"全历史"的——删掉文件也不会变小。发版走 GitHub Releases。
+# `dist/` 是本地放安装包的目录，只在本地存在。
+*.apk
+*.aab
+dist/
+
+# ── 开发过程产物 ────────────────────────────────────────
+#
+# preview/ 是 tools/make_*_preview.py 生成的预览图，183MB；
+# .fontwork/ 是 tools/build_fonts.py 下载的变量字体，17.8MB，用时自取；
+# .taste-skill/ 是设计评审工具的临时目录。
+preview/
+.fontwork/
+.taste-skill/
+
+# ── 编辑器 / 系统 ───────────────────────────────────────
+.idea/
+*.iml
+.DS_Store
+Thumbs.db
+
+# ── Python ──────────────────────────────────────────────
+__pycache__/
+*.pyc

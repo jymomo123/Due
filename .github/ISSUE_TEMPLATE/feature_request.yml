@@ -1,0 +1,57 @@
+name: 提一个想法
+description: 想要的功能、觉得别扭的交互、可以做得更好的地方
+title: "[想法] "
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        先说清楚这个 App 的边界，能省掉不少来回：
+
+        - **不联网。** 唯一的联网点是校时（只提示"系统时间好像不准"，不改数据）。
+          所以"云同步""在线备份""多人共享"这类需求，方向上是反的。
+        - **不做账号。** 数据只在你手机里。
+        - **界面是一套固定的色相。** 整个 App 只有一个色相（约 212°，淡蓝），
+          深浅靠明度。所以"能不能加个绿色主题"这类，不是加个开关的事，
+          而是整套配色要重新算对比度。
+
+        带着这些前提提想法，反而更容易被采纳。
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: 你想解决什么问题
+      description: |
+        请描述**问题**，不是**方案**。「加一个 xx 按钮」是方案，方案往往有更省事的实现；
+        「每次都要点进去才能看到还有几天，太绕」是问题，问题能被真正解决。
+      placeholder: 我每天早上想知道离考试还有几天，但现在要打开 App、等列表加载、再找那一张卡。
+    validations:
+      required: true
+
+  - type: textarea
+    id: idea
+    attributes:
+      label: 你想到的办法
+      description: 可选。如果已经有想法就写下来，没有也没关系。
+    validations:
+      required: false
+
+  - type: textarea
+    id: alternative
+    attributes:
+      label: 你现在是怎么绕过去的
+      description: |
+        可选，但很有参考价值。现有的绕法往往能说明问题到底卡在哪一环。
+      placeholder: 我把那个事件置顶了，但还是得点开 App。
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: constraints
+    attributes:
+      label: 请确认
+      options:
+        - label: 这个想法不需要联网或账号
+          required: false
+        - label: 我知道界面只有一套色相，新增颜色需要重新算对比度
+          required: false

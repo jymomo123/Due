@@ -1,0 +1,131 @@
+name: 报告一个问题
+description: 闪退、显示错乱、提醒不响、返回失灵……用这个
+title: "[Bug] "
+labels: ["bug"]
+body:
+  # 这个工程没有遥测、没有崩溃上报、没有联网（`net/TimeSync.kt` 是唯一的联网点，
+  # 而且只用来提示"你的系统时间好像不准"，不改数据）。所以作者拿到手的只有你写的这些。
+  # 模板问得细，不是走流程，是因为少一项就复现不出来。
+  - type: markdown
+    attributes:
+      value: |
+        谢谢你来报问题。开工之前先说三件事：
+
+        **一、这个 App 不联网，作者看不到你的任何数据。** 没有埋点、没有崩溃上报、
+        没有账号。所以下面的信息全靠你填——少填一项，大概率就查不出来。
+
+        **二、先说清楚版本号。** 同一个现象在不同版本里可能是完全不同的原因，
+        没有版本号的报告只能靠猜。
+
+        **三、能录屏就录屏。** 这个工程绝大多数问题是"动起来才看得见"的——
+        返回手势卡住、卡片长成列表行的过程跳了一下、数字滚动时闪一下。
+        静帧看不出来，文字更难描述。
+
+  - type: input
+    id: version
+    attributes:
+      label: 版本号
+      description: 打开 App → 设置 → 最下面的「关于」，照抄那一行（形如 `0.58.18-beta`）。
+      placeholder: 0.58.18-beta
+    validations:
+      required: true
+
+  - type: input
+    id: device
+    attributes:
+      label: 设备与系统
+      description: 手机型号 + Android 版本。设置 → 关于手机 里能看到。
+      placeholder: 小米 14 / Android 15（HyperOS 2.0）
+    validations:
+      required: true
+
+  - type: dropdown
+    id: area
+    attributes:
+      label: 出问题的地方
+      description: 选一个最接近的。不确定就选「说不准」。
+      options:
+        - 列表页（卡片、天数、秒表）
+        - 详情页（打开某一张卡片之后）
+        - 新建 / 编辑
+        - 提醒没有按时响，或者响了不该响的
+        - 返回手势 / 页面切换动画
+        - 设置页（外观、字体、背景）
+        - 备份与恢复
+        - 桌面小组件
+        - 闪退（App 直接没了）
+        - 说不准
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: 怎么才能重现
+      description: |
+        一步一步写，从打开 App 开始。比如：
+        1. 打开 App
+        2. 点第一张卡片进详情
+        3. 从屏幕左边缘往右划
+        4. 页面停住不动了，再点哪儿都没反应
+      placeholder: |
+        1.
+        2.
+        3.
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: 你期望发生什么
+      placeholder: 页面应该退回列表，并且能继续操作。
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual
+    attributes:
+      label: 实际发生了什么
+      description: 越具体越好。「不好用」查不出来，「点了没反应，要等三秒才恢复」能查。
+    validations:
+      required: true
+
+  - type: dropdown
+    id: frequency
+    attributes:
+      label: 每次都能重现吗
+      description: |
+        这一项很关键。偶发问题（十次里一次）和必现问题，排查方向完全不同——
+        偶发多半和时序有关（协程被取消、动画没跑完、状态没存住）。
+      options:
+        - 每次都能
+        - 大多数时候能
+        - 偶尔（十次里一两次）
+        - 只见过一次
+    validations:
+      required: true
+
+  - type: textarea
+    id: media
+    attributes:
+      label: 录屏或截图
+      description: |
+        直接把文件拖进这个框里就会自动上传。
+
+        **录屏比截图有用得多。** 如果录屏，请让屏幕上的秒表也入镜——
+        它能证明画面是真的在动，而不是一帧静止的图被反复播放。
+      placeholder: 把录屏 / 截图拖到这里
+    validations:
+      required: false
+
+  - type: textarea
+    id: extra
+    attributes:
+      label: 还有别的线索吗
+      description: |
+        可选的。比如：是不是改过系统字体大小、有没有开开发者选项里的
+        「动画时长缩放 0.5x」、是不是刚从备份恢复过、出问题前做了什么。
+      placeholder: 系统动画缩放设成了 0.5x
+    validations:
+      required: false

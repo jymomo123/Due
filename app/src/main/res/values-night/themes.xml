@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- 夜冰。窗口底色取 IceBackground 深色档的中段，避免冷启动闪白。 -->
+    <style name="Theme.Due" parent="android:Theme.Material.NoActionBar">
+        <item name="android:windowBackground">#101E2C</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:navigationBarColor">@android:color/transparent</item>
+        <item name="android:windowLightStatusBar">false</item>
+        <item name="android:windowLightNavigationBar">false</item>
+    </style>
+</resources>
